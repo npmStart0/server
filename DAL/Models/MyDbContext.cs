@@ -26,8 +26,8 @@ namespace DAL.Models
             //DotEnv.Load(options: new DotEnvOptions(envFilePaths: ["../../.env.local"]));
 
 
-            //string connection = Environment.GetEnvironmentVariable("DB_CONNECTION");
-            string connection = "server=127.0.0.1;uid=root;pwd=1234;database=npm;SslMode=Required";
+            string connection = Environment.GetEnvironmentVariable("DB_CONNECTION");
+            //string connection = "server=127.0.0.1;uid=root;pwd=1234;database=npm;SslMode=Required";
 
             // בדיקה אם משתנה הסביבה נטען כראוי
             if (string.IsNullOrEmpty(connection))
