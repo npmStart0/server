@@ -92,6 +92,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/", () => "server is running);
+app.MapGet("/", () => "server is running");
 
 app.Run();
