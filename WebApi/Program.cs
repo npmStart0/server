@@ -50,14 +50,14 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 string env = "";
-// ÷áéòú äñáéáä äğåëçéú, áøéøú äîçãì äéà 'development'
+// Ã·Ã¡Ã©Ã²Ãº Ã¤Ã±Ã¡Ã©Ã¡Ã¤ Ã¤Ã°Ã¥Ã«Ã§Ã©Ãº, Ã¡Ã¸Ã©Ã¸Ãº Ã¤Ã®Ã§Ã£Ã¬ Ã¤Ã©Ã  'development'
 if (app.Environment.IsDevelopment())
     env = "local";
 else
     env = "remote";
 string envFile = $"../.env.{env}"; 
 
-// èòéğú ÷åáõ ä-.env äîúàéí
+// Ã¨Ã²Ã©Ã°Ãº Ã·Ã¥Ã¡Ãµ Ã¤-.env Ã¤Ã®ÃºÃ Ã©Ã­
 DotEnv.Load(options: new DotEnvOptions(envFilePaths: [envFile])); 
 
 // Configure the HTTP request pipeline.
@@ -92,6 +92,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/", () => "server is running, connection:"+Environment.GetEnvironmentVariable("DB_CONNECTION"));
+app.MapGet("/", () => "server is running);
 
 app.Run();
