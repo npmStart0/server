@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using dotenv.net;
+using DotNetEnv;
 
 
 namespace DAL.Models
@@ -23,21 +24,24 @@ namespace DAL.Models
         { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
 
-            //DotEnv.Load(options: new DotEnvOptions(envFilePaths: ["../../.env.local"]));
+            // בדיקת הסביבה
+            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
 
-
-            string connection = Environment.GetEnvironmentVariable("DB_CONNECTION");
-            //string connection = "server=127.0.0.1;uid=root;pwd=1234;database=npm;SslMode=Required";
-
-            // בדיקה אם משתנה הסביבה נטען כראוי
-            if (string.IsNullOrEmpty(connection))
+            // טעינת הקובץ הנכון לפי הסביבה
+            if (environment == "Development")
             {
-                throw new InvalidOperationException("Connection string not found in environment variables.");
+                Env.Load("../.env.local");
+            }
+            else
+            {
+                Env.Load("../.env.remote");
             }
 
+            // קבלת מחרוזת החיבור מהקובץ
+            string connectionString = Env.GetString("DB_CONNECTION");
 
-            optionsBuilder.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 35)));
-            //optionsBuilder.UseSqlServer(connection);
+            // הגדרת MySQL עם מחרוזת החיבור
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
     }
 }
