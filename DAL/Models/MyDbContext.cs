@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using dotenv.net;
 using DotNetEnv;
-
+using System.Diagnostics;
 
 namespace DAL.Models
 {
@@ -20,27 +20,22 @@ namespace DAL.Models
         public DbSet<User> Users { get; set; }
 
         public MyDbContext(DbContextOptions<MyDbContext> options)
-    : base(options)
+            : base(options)
         { }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
 
-            // בדיקת הסביבה
-            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-
-            // טעינת הקובץ הנכון לפי הסביבה
-            if (environment == "Development")
-            {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Check the environment
+            #if DEBUG
                 Env.Load("../.env.local");
-            }
-            else
-            {
+            #else
                 Env.Load("../.env.remote");
-            }
-
-            // קבלת מחרוזת החיבור מהקובץ
+            #endif
+            
+            // Get the connection string from the file
             string connectionString = Env.GetString("DB_CONNECTION");
 
-            // הגדרת MySQL עם מחרוזת החיבור
+            // Configure MySQL with the connection string
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
     }

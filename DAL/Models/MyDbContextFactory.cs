@@ -12,17 +12,17 @@ namespace DAL.Models
     public class MyDbContextFactory : IDesignTimeDbContextFactory<MyDbContext>
     {
         public MyDbContext CreateDbContext(string[] args)
-        {           
+        {
 
             var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
 
-            // טען את מחרוזת החיבור מתוך הקובץ
+            // Load the connection string from the environment variable
             var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
 
-            // הגדרת האופציות
+            // Configure the options
             optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21)));
 
-            // החזרת DbContext עם האופציות
+            // Return a DbContext with the configured options
             return new MyDbContext(optionsBuilder.Options);
         }
     }
