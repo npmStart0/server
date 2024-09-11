@@ -22,6 +22,11 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# שלב להוספת המיגרציות למסד הנתונים
+FROM publish AS migration
+WORKDIR /app/publish
+RUN dotnet ef database update
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

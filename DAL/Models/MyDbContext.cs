@@ -7,7 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using dotenv.net;
-
+using DotNetEnv;
+using System.Diagnostics;
 
 namespace DAL.Models
 {
@@ -19,25 +20,23 @@ namespace DAL.Models
         public DbSet<User> Users { get; set; }
 
         public MyDbContext(DbContextOptions<MyDbContext> options)
-    : base(options)
+            : base(options)
         { }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
 
-            //DotEnv.Load(options: new DotEnvOptions(envFilePaths: ["../../.env.local"]));
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Check the environment
+            #if DEBUG
+                Env.Load("../.env.local");
+            #else
+                Env.Load("../.env.remote");
+            #endif
+            
+            // Get the connection string from the file
+            string connectionString = Env.GetString("DB_CONNECTION");
 
-
-            string connection = Environment.GetEnvironmentVariable("DB_CONNECTION");
-            //string connection = "server=127.0.0.1;uid=root;pwd=1234;database=npm;SslMode=Required";
-
-            // בדיקה אם משתנה הסביבה נטען כראוי
-            if (string.IsNullOrEmpty(connection))
-            {
-                throw new InvalidOperationException("Connection string not found in environment variables.");
-            }
-
-
-            optionsBuilder.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 35)));
-            //optionsBuilder.UseSqlServer(connection);
+            // Configure MySQL with the connection string
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
     }
 }

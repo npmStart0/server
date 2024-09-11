@@ -4,14 +4,17 @@ using DAL.Interfaces;
 using DAL.Models;
 using DAL.Repositories;
 using dotenv.net;
+using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//builder.Configuration.AddEnvironmentVariables();
 //DotEnv.Load(options: new DotEnvOptions(envFilePaths: ["../.env.local"]));
 
 //builder.Services.AddDbContext<MyDbContext>(options => options.UseMySql("server=127.0.0.1;uid=root;pwd=1234;database=npm;SslMode=Required", new MySqlServerVersion(new Version(8, 0, 21))));
-builder.Services.AddDbContext<MyDbContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("DB_CONNECTION"), new MySqlServerVersion(new Version(8, 0, 21))));
+//builder.Services.AddDbContext<MyDbContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("DB_CONNECTION"), new MySqlServerVersion(new Version(8, 0, 21))));
+builder.Services.AddDbContext<MyDbContext>();
 
 
 builder.Services.AddTransient<ICommentRepository, CommentRepository>();
@@ -47,18 +50,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-
 var app = builder.Build();
-string env = "";
-// קביעת הסביבה הנוכחית, ברירת המחדל היא 'development'
-if (app.Environment.IsDevelopment())
-    env = "local";
-else
-    env = "remote";
-string envFile = $"../.env.{env}"; 
-
-// טעינת קובץ ה-.env המתאים
-DotEnv.Load(options: new DotEnvOptions(envFilePaths: [envFile])); 
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
@@ -92,6 +84,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/", () => "server is running, connection:"+Environment.GetEnvironmentVariable("DB_CONNECTION"));
+app.MapGet("/", () => "server is running");
 
 app.Run();
