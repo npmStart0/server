@@ -22,69 +22,113 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<List<SubjectDto>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return await SubjectService.GetAllSubjectsAsync();
+                var subjects = await SubjectService.GetAllSubjectsAsync();
+                return Ok(subjects); // HTTP 200 OK
             }
             catch (Exception ex)
             {
-                logger.LogError("failed to get all "+ex.Message);
-                return null;
-            }
-        }
-        [HttpGet("{id}")]
-        public async Task<SubjectDto> GetbyId(int id)
-        {
-            try
-            {
-                return await SubjectService.GetByIdAsync(id);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"fail to get Subject with this id {ex.Message}");
-                return null;
+                logger.LogError("Failed to get all subjects: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500
             }
         }
 
-        // POST api/<ValuesController>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var subject = await SubjectService.GetByIdAsync(id);
+                if (subject == null)
+                {
+                    return NotFound($"Subject with ID {id} not found"); // HTTP 404 Not Found
+                }
+                return Ok(subject); // HTTP 200 OK
+            }
+            catch (ArgumentException ex)
+            {
+                logger.LogError($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message); // HTTP 400 Bad Request
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to get subject with ID {id}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error"); // HTTP 500
+            }
+        }
+
         [HttpPost]
-        public async Task Add(SubjectDto newSubject)
+        public async Task<IActionResult> Add([FromBody] SubjectDto newSubject)
         {
             try
             {
+                if (newSubject == null)
+                {
+                    return BadRequest("Subject cannot be null"); // HTTP 400 Bad Request
+                }
+
                 await SubjectService.AddNewSubjectAsync(newSubject);
+                return CreatedAtAction(nameof(GetById), new { id = newSubject.Id }, newSubject); // HTTP 201 Created
+            }
+            catch (ArgumentException ex)
+            {
+                logger.LogError("Invalid argument: " + ex.Message);
+                return BadRequest(ex.Message); // HTTP 400 Bad Request
             }
             catch (Exception ex)
             {
-                logger.LogError("faild in api to add Subject" + ex.Message);
+                logger.LogError("Failed to add subject: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
+
         [HttpPut]
-        public async Task<SubjectDto> Update(SubjectDto e)
+        public async Task<IActionResult> Update([FromBody] SubjectDto subject)
         {
             try
             {
-                return await SubjectService.UpdateAsync(e);
+                if (subject == null)
+                {
+                    return BadRequest("Subject cannot be null"); // HTTP 400 Bad Request
+                }
+
+                var updatedSubject = await SubjectService.UpdateAsync(subject);
+                return Ok(updatedSubject); // HTTP 200 OK
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogError("Subject not found: " + ex.Message);
+                return NotFound(ex.Message); // HTTP 404 Not Found
             }
             catch (Exception ex)
             {
-                logger.LogError("failed to update "+ex.Message);
-                return null;
+                logger.LogError("Failed to update subject: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
+
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 await SubjectService.DeleteAsync(id);
+                return NoContent(); // HTTP 204 No Content
+            }
+            catch (ArgumentNullException ex)
+            {
+                logger.LogError("Subject not found: " + ex.Message);
+                return NotFound(ex.Message); // HTTP 404 Not Found
             }
             catch (Exception ex)
             {
-                logger.LogError("failed to delete "+ex.Message);
+                logger.LogError("Failed to delete subject: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
+
     }
 }

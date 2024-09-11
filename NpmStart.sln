@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.env.local = .env.local
 		.env.remote = .env.remote
 		.gitignore = .gitignore
+		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
 Global
