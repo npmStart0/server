@@ -28,7 +28,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to add User" + ex.Message.ToString());
-                return null;
+                throw;
             }
         }
 
@@ -43,6 +43,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to delete User" + ex.Message.ToString());
+                throw;
             }
         }
 
@@ -55,7 +56,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to get Users" + ex.Message.ToString());
-                return new List<User>();
+                throw;
             }
         }
 
@@ -67,14 +68,14 @@ namespace DAL.Repositories
                 if (entity == null)
                 {
                     logger.LogError("The User is null");
-                    return null;
+                    throw new ArgumentNullException(nameof(entity), "The User is null");
                 }
                 return entity;
             }
             catch (Exception ex)
             {
                 logger.LogError("failed to get User" + ex.Message.ToString());
-                return null;
+                throw;
             }
         }
 
@@ -86,14 +87,14 @@ namespace DAL.Repositories
                 if (entity == null)
                 {
                     logger.LogError("The User is null");
-                    return null;
+                    throw new ArgumentNullException(nameof(entity), "The User is null");
                 }
                 return entity;
             }
             catch (Exception ex)
             {
                 logger.LogError("failed to get User" + ex.Message.ToString());
-                return null;
+                throw;
             }
         }
 
@@ -105,7 +106,7 @@ namespace DAL.Repositories
                 if (UserToUpdate == null)
                 {
                     logger.LogError("the Id is not exit");
-                    return null;
+                    throw new ArgumentNullException(nameof(UserToUpdate), "The User is null");
                 }
                 await DeleteAsync(entity.Id);
                 await AddAsync(entity);
@@ -117,7 +118,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to update User" + ex.Message.ToString());
-                return null;
+                throw;
             }
         }
     }

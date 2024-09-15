@@ -27,7 +27,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to add Discussion" + ex.Message.ToString());
-                return new Discussion();
+                throw;
             }
         }
 
@@ -42,6 +42,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to delete Discussion" + ex.Message.ToString());
+                throw;
             }
         }
 
@@ -67,7 +68,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to get Discussions" + ex.Message.ToString());
-                return new List<Discussion>();
+                throw;
             }
         }
 
@@ -83,15 +84,14 @@ namespace DAL.Repositories
 
                 if (discussion == null)
                 {
-                    logger.LogError("The Discussion is null");
-                    throw new Exception("The Discussion is null");
+                    throw new ArgumentNullException(nameof(entity), "The Discussion is null");
                 }
                 return discussion;
             }
             catch (Exception ex)
             {
                 logger.LogError("failed to get Discussion" + ex.Message.ToString());
-                return new Discussion();
+                throw;
             }
         }
 
@@ -103,7 +103,7 @@ namespace DAL.Repositories
                 if (DiscussionToUpdate == null)
                 {
                     logger.LogError("the Id is not exit");
-                    return new Discussion();
+                    throw new ArgumentNullException(nameof(DiscussionToUpdate), "The Id is not exit");
                 }
                 await DeleteAsync(entity.Id);
                 await AddAsync(entity);
@@ -114,7 +114,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to update Discussion" + ex.Message.ToString());
-                return new Discussion();
+                throw;
             }
         }
     }

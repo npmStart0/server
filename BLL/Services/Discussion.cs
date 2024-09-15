@@ -40,8 +40,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 logger.LogError("faild to add Discussion in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
 
@@ -54,8 +53,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 logger.LogError("faild to delete Discussion in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
 
@@ -69,8 +67,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 logger.LogError("faild to get all Discussions in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
 
@@ -84,8 +81,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 logger.LogError("faild to get Discussion in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
 
@@ -100,8 +96,7 @@ namespace BLL.Services
             catch(Exception ex)
             {
                 logger.LogError("faild to update Discussion in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
     }

@@ -21,70 +21,120 @@ namespace WebApi.Controllers
             this.logger = logger;
         }
 
-        [HttpGet]
-        public async Task<List<GetCommentDTO>> GetAll()
-        {
-            try
+
+
+            [HttpGet]
+            public async Task<IActionResult> GetAll()
+
             {
-                return await CommentService.GetAllCommentsAsync();
+                try
+                {
+                    var comments = await CommentService.GetAllCommentsAsync();
+                    return Ok(comments); // HTTP 200 OK
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError("Failed to get all comments: " + ex.Message);
+                    return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
+                }
             }
-            catch (Exception ex)
+
+
+            [HttpGet("{id}")]
+            public async Task<IActionResult> GetById(int id)
             {
-                logger.LogError("failed to get all "+ex.Message);
-                return null;
+                try
+                {
+                    var comment = await CommentService.GetByIdAsync(id);
+                    if (comment == null)
+                    {
+                        return NotFound($"Comment with ID {id} not found"); // HTTP 404 Not Found
+                    }
+                    return Ok(comment); // HTTP 200 OK
+                }
+                catch (ArgumentException ex)
+                {
+                    logger.LogError($"Invalid argument: {ex.Message}");
+                    return BadRequest(ex.Message); // HTTP 400 Bad Request
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError($"Failed to get comment with ID {id}: {ex.Message}");
+                    return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
+                }
             }
-        }
-        [HttpGet("{id}")]
-        public async Task<GetCommentDTO> GetbyId(int id)
-        {
-            try
+
+
+            [HttpPost]
+            public async Task<IActionResult> Add([FromBody] CommentDto newComment)
+
             {
-                return await CommentService.GetByIdAsync(id);
+                try
+                {
+                    if (newComment == null)
+                    {
+                        return BadRequest("Comment cannot be null"); // HTTP 400 Bad Request
+                    }
+
+                    await CommentService.AddNewCommentAsync(newComment);
+                    return CreatedAtAction(nameof(GetById), new { id = newComment.Id }, newComment); // HTTP 201 Created
+                }
+                catch (ArgumentException ex)
+                {
+                    logger.LogError("Invalid argument: " + ex.Message);
+                    return BadRequest(ex.Message); // HTTP 400 Bad Request
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError("Failed to add comment: " + ex.Message);
+                    return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
+                }
             }
-            catch (Exception ex)
+
+            [HttpPut]
+            public async Task<IActionResult> Update([FromBody] CommentDto comment)
             {
-                logger.LogError($"fail to get Comment with this id {ex.Message}");
-                return null;
+                try
+                {
+                    if (comment == null)
+                    {
+                        return BadRequest("Comment cannot be null"); // HTTP 400 Bad Request
+                    }
+
+                    var updatedComment = await CommentService.UpdateAsync(comment);
+                    return Ok(updatedComment); // HTTP 200 OK
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    logger.LogError("Comment not found: " + ex.Message);
+                    return NotFound(ex.Message); // HTTP 404 Not Found
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError("Failed to update comment: " + ex.Message);
+                    return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
+                }
+            }
+
+            [HttpDelete("{id}")]
+            public async Task<IActionResult> Delete(int id)
+            {
+                try
+                {
+                    await CommentService.DeleteAsync(id);
+                    return NoContent(); // HTTP 204 No Content
+                }
+                catch (ArgumentNullException ex)
+                {
+                    logger.LogError("Comment not found: " + ex.Message);
+                    return NotFound(ex.Message); // HTTP 404 Not Found
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError("Failed to delete comment: " + ex.Message);
+                    return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
+                }
             }
         }
 
-        // POST api/<ValuesController>
-        [HttpPost]
-        public async Task Add(CreateCommentDTO newComment)
-        {
-            try
-            {
-                await CommentService.AddNewCommentAsync(newComment);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("faild in api to add Comment" + ex.Message);
-            }
-        }
-        [HttpPut]
-        public async Task<GetCommentDTO> Update(CreateCommentDTO e)
-        {
-            try
-            {
-                return await CommentService.UpdateAsync(e);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("failed to update "+ex.Message);
-                return null;
-            }
-        }
-        [HttpDelete("{id}")]
-        public async Task Delete(int id)
-        {
-            try
-            {
-                await CommentService.DeleteAsync(id);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("failed to delete "+ex.Message);
-            }
-        }
     }
-}

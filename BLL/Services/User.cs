@@ -42,8 +42,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 logger.LogError("faild to add User in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
 
@@ -56,8 +55,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 logger.LogError("faild to delete User in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
 
@@ -71,8 +69,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 logger.LogError("faild to get all Users in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
 
@@ -86,8 +83,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 logger.LogError("faild to get User in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
 
@@ -101,8 +97,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 logger.LogError("faild to get User in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
 
@@ -117,8 +112,7 @@ namespace BLL.Services
             catch(Exception ex)
             {
                 logger.LogError("faild to update User in the service" + ex.Message);
-                //TODO: handele exception
-                throw ex;
+                throw;
             }
         }
     }

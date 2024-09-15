@@ -10,8 +10,7 @@ namespace DAL.Repositories
     {
         private readonly IContext context;
         private readonly ILogger<string> logger;
-        public CommentRepository(IContext context, ILogger<string> logger)
-        {
+        public CommentRepository(IContext context, ILogger<string> logger) {
             this.context = context;
             this.logger = logger;
         }
@@ -27,7 +26,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to add Comment" + ex.Message.ToString());
-                return new Comment();
+                throw;
             }
         }
 
@@ -42,6 +41,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to delete Comment" + ex.Message.ToString());
+                throw;
             }
         }
 
@@ -66,7 +66,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to get Comments" + ex.Message.ToString());
-                return new List<Comment>();
+                throw;
             }
         }
 
@@ -81,17 +81,19 @@ namespace DAL.Repositories
 
                 if (comment != null)
                 {
+
                     return comment;
                 }
                 else 
                 {
-                    throw new Exception("Comment not found");
+                    logger.LogError("The Comment is null");
+                    throw new ArgumentNullException(nameof(entity), "The Comment is null");
                 }
             }
             catch (Exception ex)
             {
                 logger.LogError("failed to get Comment" + ex.Message.ToString());
-                return new Comment();
+                throw;
             }
         }
 
@@ -103,7 +105,7 @@ namespace DAL.Repositories
                 if (CommentToUpdate == null)
                 {
                     logger.LogError("the Id is not exit");
-                    return new Comment();
+                    throw new ArgumentNullException(nameof(CommentToUpdate), "The Id is not exit");
                 }
                 await DeleteAsync(entity.Id);
                 await AddAsync(entity);
@@ -115,7 +117,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to update Comment" + ex.Message.ToString());
-                return new Comment();
+                throw;
             }
         }
     }

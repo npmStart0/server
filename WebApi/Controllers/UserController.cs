@@ -21,82 +21,127 @@ namespace WebApi.Controllers
             this.logger = logger;
         }
 
+
         [HttpGet]
-        public async Task<List<UserDTO>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return await UserService.GetAllUsersAsync();
+                var users = await UserService.GetAllUsersAsync();
+                return Ok(users); // HTTP 200 OK
             }
             catch (Exception ex)
             {
-                logger.LogError("failed to get all "+ex.Message);
-                return null;
+                logger.LogError("Failed to get all users: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
+
         [HttpGet("{id}")]
-        public async Task<UserDTO> GetbyId(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                return await UserService.GetByIdAsync(id);
+                var user = await UserService.GetByIdAsync(id);
+                if (user == null)
+                {
+                    return NotFound($"User with ID {id} not found"); // HTTP 404 Not Found
+                }
+                return Ok(user); // HTTP 200 OK
             }
             catch (Exception ex)
             {
-                logger.LogError($"fail to get User with this id {ex.Message}");
-                return null;
+                logger.LogError($"Failed to get user with ID {id}: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
 
         [HttpGet("{email}/{password}")]
-        public async Task<UserDTO> GetByEmailAndPassword(string email, string password)
+        public async Task<IActionResult> GetByEmailAndPassword(string email, string password)
         {
             try
             {
-                return await UserService.GetByEmailAndByPasswordAsync(email, password);
+                var user = await UserService.GetByEmailAndByPasswordAsync(email, password);
+                if (user == null)
+                {
+                    return NotFound("User not found with provided email and password"); // HTTP 404 Not Found
+                }
+                return Ok(user); // HTTP 200 OK
             }
             catch (Exception ex)
             {
-                logger.LogError($"fail to get User with this id {ex.Message}");
-                return null;
+                logger.LogError($"Failed to get user with email {email}: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
-        // POST api/<ValuesController>
+
         [HttpPost]
-        public async Task Add(UserDTO newUser)
+        public async Task<IActionResult> Add([FromBody] UserDto newUser)
         {
             try
             {
+                if (newUser == null)
+                {
+                    return BadRequest("User cannot be null"); // HTTP 400 Bad Request
+                }
+
                 await UserService.AddNewUserAsync(newUser);
+                return CreatedAtAction(nameof(GetById), new { id = newUser.Id }, newUser); // HTTP 201 Created
+            }
+            catch (ArgumentException ex)
+            {
+                logger.LogError("Invalid argument: " + ex.Message);
+                return BadRequest(ex.Message); // HTTP 400 Bad Request
             }
             catch (Exception ex)
             {
-                logger.LogError("faild in api to add User" + ex.Message);
+                logger.LogError("Failed to add user: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
+
         [HttpPut]
-        public async Task<UserDTO> Update(UserDTO e)
+        public async Task<IActionResult> Update([FromBody] UserDto user)
         {
             try
             {
-                return await UserService.UpdateAsync(e);
+                if (user == null)
+                {
+                    return BadRequest("User cannot be null"); // HTTP 400 Bad Request
+                }
+
+                var updatedUser = await UserService.UpdateAsync(user);
+                return Ok(updatedUser); // HTTP 200 OK
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogError("User not found: " + ex.Message);
+                return NotFound(ex.Message); // HTTP 404 Not Found
             }
             catch (Exception ex)
             {
-                logger.LogError("failed to update "+ex.Message);
-                return null;
+                logger.LogError("Failed to update user: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
+
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 await UserService.DeleteAsync(id);
+                return NoContent(); // HTTP 204 No Content
+            }
+            catch (ArgumentNullException ex)
+            {
+                logger.LogError("User not found: " + ex.Message);
+                return NotFound(ex.Message); // HTTP 404 Not Found
             }
             catch (Exception ex)
             {
-                logger.LogError("failed to delete "+ex.Message);
+                logger.LogError("Failed to delete user: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
     }

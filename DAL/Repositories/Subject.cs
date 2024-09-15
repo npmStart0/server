@@ -27,7 +27,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to add Subject" + ex.Message.ToString());
-                return new Subject();
+                throw;
             }
         }
 
@@ -42,6 +42,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to delete Subject" + ex.Message.ToString());
+                throw;
             }
         }
 
@@ -54,6 +55,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to get Subjects" + ex.Message.ToString());
+
                 throw new Exception("failed in dal.subject "+ex.Message.ToString());
             }
         }
@@ -66,14 +68,14 @@ namespace DAL.Repositories
                 if (entity == null)
                 {
                     logger.LogError("The Subject is null");
-                    return new Subject();
+                    throw new ArgumentNullException(nameof(entity), "The subject is null");
                 }
                 return entity;
             }
             catch (Exception ex)
             {
                 logger.LogError("failed to get Subject" + ex.Message.ToString());
-                return new Subject();
+                throw;
             }
         }
 
@@ -85,7 +87,7 @@ namespace DAL.Repositories
                 if (SubjectToUpdate == null)
                 {
                     logger.LogError("the Id is not exit");
-                    return new Subject();
+                    throw new ArgumentNullException(nameof(SubjectToUpdate), "the Id is not exit");
                 }
                 await DeleteAsync(entity.Id);
                 await AddAsync(entity);
@@ -96,7 +98,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to update Subject" + ex.Message.ToString());
-                return new Subject();
+                throw;
             }
         }
     }
