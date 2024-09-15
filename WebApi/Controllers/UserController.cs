@@ -76,7 +76,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] UserDto newUser)
+        public async Task<IActionResult> Add([FromBody] UserDTO newUser)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UserDto user)
+        public async Task<IActionResult> Update([FromBody] UserDTO user)
         {
             try
             {

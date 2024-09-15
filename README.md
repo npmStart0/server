@@ -23,21 +23,16 @@ Ensure you update the content of the following parameters:
 
 3. Open the project in Visual Studio.
 
-4. Set the DAL project as the startup project:
-- Navigate  'View' > 'Solution Explorer'.
-- Right-click on the DAL project in the Solution Explorer.
-- Select 'Set as StartUp Project' from the context menu.
-
-6. Creating and updating the database. 
+4. Creating and updating the database. 
 - Navigate to 'View' > 'Other Windows' > 'Package Manager Console'.
 - In the window that opens, run the command: `update-database` .
+##### Note: The 'Default project' in the 'Package Manager Console' must be set to the DAL project.
 
-
-7. Set the WebApi project as the startup project:
+5. Set the WebApi project as the startup project:
 - In the Solution Explorer, right-click on the WebApi project.
 - Choose 'Set as StartUp Project'.
 
 
-8. Run the application by clicking the appropriate button in Visual Studio.
+6. Run the application by clicking the appropriate button in Visual Studio.
 
 Follow your system prompts and respond accordingly to complete the installation successfully.

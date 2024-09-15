@@ -29,13 +29,13 @@ namespace BLL.Services
             this.mapper = config.CreateMapper();
         }
 
-        public async Task<SubjectDto> AddNewSubjectAsync(SubjectDto e)
+        public async Task<SubjectDTO> AddNewSubjectAsync(SubjectDTO e)
         {
             try
             {
                 var map = mapper.Map<Subject>(e);
                 var answer=await SubjectRepository.AddAsync(map);
-                return mapper.Map<SubjectDto>(answer);
+                return mapper.Map<SubjectDTO>(answer);
             }
             catch (Exception ex)
             {
@@ -57,12 +57,12 @@ namespace BLL.Services
             }
         }
 
-        public async Task<List<SubjectDto>> GetAllSubjectsAsync()
+        public async Task<List<SubjectDTO>> GetAllSubjectsAsync()
         {
             try
             {
                 var answer= await SubjectRepository.GetAllAsync();
-                return mapper.Map<List<SubjectDto>>(answer);    
+                return mapper.Map<List<SubjectDTO>>(answer);    
             }
             catch (Exception ex)
             {
@@ -71,12 +71,12 @@ namespace BLL.Services
             }
         }
 
-        public async Task<SubjectDto> GetByIdAsync(int id)
+        public async Task<SubjectDTO> GetByIdAsync(int id)
         {
             try
             {
                 var answer= await SubjectRepository.GetByIdAsync(id);
-                return mapper.Map<SubjectDto>(answer);
+                return mapper.Map<SubjectDTO>(answer);
             }
             catch (Exception ex)
             {
@@ -85,13 +85,13 @@ namespace BLL.Services
             }
         }
 
-        public async Task<SubjectDto> UpdateAsync(SubjectDto e)
+        public async Task<SubjectDTO> UpdateAsync(SubjectDTO e)
         {
             try
             {
                 var map= mapper.Map<Subject>(e);
                 var answer= await SubjectRepository.UpdateAsync(map);
-                return mapper.Map<SubjectDto>(answer);
+                return mapper.Map<SubjectDTO>(answer);
             }
             catch(Exception ex)
             {

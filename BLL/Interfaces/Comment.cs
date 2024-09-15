@@ -10,10 +10,10 @@ namespace BLL.Interfaces
 {
     public interface ICommentService
     {
-        Task<CommentDto> AddNewCommentAsync(CommentDto Comment);
+        Task<GetCommentDTO> AddNewCommentAsync(CreateCommentDTO Comment);
         Task DeleteAsync(int id);
-        Task<CommentDto> GetByIdAsync(int id);
-        Task<List<CommentDto>> GetAllCommentsAsync();
-        Task<CommentDto> UpdateAsync(CommentDto Comment);
+        Task<GetCommentDTO> GetByIdAsync(int id);
+        Task<List<GetCommentDTO>> GetAllCommentsAsync();
+        Task<GetCommentDTO> UpdateAsync(CreateCommentDTO Comment);
     }
 }

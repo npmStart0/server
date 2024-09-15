@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DTO.classes
 {
-    public class SubjectDTO
+    public class CreateDiscussionDTO : DiscussionDTO
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+
+        public int UserID { get; set; }
+        public int SubjectId { get; set; }
     }
 }

@@ -9,10 +9,10 @@ namespace BLL.Interfaces
 {
     public interface IDiscussionService
     {
-        Task<DiscussionDto> AddNewDiscussionAsync(DiscussionDto Discussion);
+        Task<GetDiscussionDTO> AddNewDiscussionAsync(CreateDiscussionDTO Discussion);
         Task DeleteAsync(int id);
-        Task<DiscussionDto> GetByIdAsync(int id);
-        Task<List<DiscussionDto>> GetAllDiscussionsAsync();
-        Task<DiscussionDto> UpdateAsync(DiscussionDto Discussion);
+        Task<GetDiscussionDTO> GetByIdAsync(int id);
+        Task<List<GetDiscussionDTO>> GetAllDiscussionsAsync();
+        Task<GetDiscussionDTO> UpdateAsync(CreateDiscussionDTO Discussion);
     }
 }

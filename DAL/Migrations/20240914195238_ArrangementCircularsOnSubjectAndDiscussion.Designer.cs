@@ -3,6 +3,7 @@ using System;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240914195238_ArrangementCircularsOnSubjectAndDiscussion")]
+    partial class ArrangementCircularsOnSubjectAndDiscussion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,9 +62,6 @@ namespace DAL.Migrations
                     b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -71,11 +71,30 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubjectId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Discussions");
+                });
+
+            modelBuilder.Entity("DAL.Models.DiscussionSubjects", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("DiscussionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiscussionId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("DiscussionSubjects");
                 });
 
             modelBuilder.Entity("DAL.Models.Subject", b =>
@@ -137,26 +156,42 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.Discussion", b =>
                 {
-                    b.HasOne("DAL.Models.Subject", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DAL.Models.User", "User")
                         .WithMany("Discussions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Subject");
-
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Models.DiscussionSubjects", b =>
+                {
+                    b.HasOne("DAL.Models.Discussion", "Discussion")
+                        .WithMany()
+                        .HasForeignKey("DiscussionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Models.Subject", "Subject")
+                        .WithMany("DiscussionSubjects")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Discussion");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("DAL.Models.Discussion", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("DAL.Models.Subject", b =>
+                {
+                    b.Navigation("DiscussionSubjects");
                 });
 
             modelBuilder.Entity("DAL.Models.User", b =>

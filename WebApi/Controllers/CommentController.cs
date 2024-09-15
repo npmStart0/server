@@ -21,8 +21,11 @@ namespace WebApi.Controllers
             this.logger = logger;
         }
 
+
+
             [HttpGet]
             public async Task<IActionResult> GetAll()
+
             {
                 try
                 {
@@ -35,6 +38,7 @@ namespace WebApi.Controllers
                     return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
                 }
             }
+
 
             [HttpGet("{id}")]
             public async Task<IActionResult> GetById(int id)
@@ -60,8 +64,10 @@ namespace WebApi.Controllers
                 }
             }
 
+
             [HttpPost]
-            public async Task<IActionResult> Add([FromBody] CommentDto newComment)
+            public async Task<IActionResult> Add([FromBody] CreateCommentDTO newComment)
+
             {
                 try
                 {
@@ -86,7 +92,7 @@ namespace WebApi.Controllers
             }
 
             [HttpPut]
-            public async Task<IActionResult> Update([FromBody] CommentDto comment)
+            public async Task<IActionResult> Update([FromBody] CreateCommentDTO comment)
             {
                 try
                 {

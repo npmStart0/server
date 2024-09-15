@@ -3,6 +3,7 @@ using System;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240914205615_ArrangementDiscussion2")]
+    partial class ArrangementDiscussion2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,7 +141,7 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Models.Discussion", b =>
                 {
                     b.HasOne("DAL.Models.Subject", "Subject")
-                        .WithMany()
+                        .WithMany("Discussions")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -157,6 +160,11 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Models.Discussion", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("DAL.Models.Subject", b =>
+                {
+                    b.Navigation("Discussions");
                 });
 
             modelBuilder.Entity("DAL.Models.User", b =>

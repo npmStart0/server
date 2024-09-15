@@ -12,17 +12,14 @@ namespace DAL.Models
     {
         [Key]
         public int Id { get; set; }
-
         [Required]
-        //[MaxLength(50)] // Adjust maximum length as needed
         public required string Username { get; set; }
-
         [Required]
-        //[MaxLength(100)] // Adjust maximum length as needed
         public string Email { get; set; }
-
         [Required]
-        //[MaxLength(50)] // Adjust maximum length as needed
         public string Password { get; set; }
+
+        public virtual ICollection<Discussion> Discussions { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

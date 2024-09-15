@@ -2,11 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using DAL.Interfaces;
 using DAL.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -18,7 +14,6 @@ namespace DAL.Repositories
         public UserRepository(IContext context, ILogger<string> logger)
         {
             this.context = context;
-            //this.context = myDbContext;
             this.logger = logger;
         }
 
@@ -56,8 +51,6 @@ namespace DAL.Repositories
         {
             try
             {
-                //Microsoft.Data.SqlClient.SqlException: 'A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: SQL Network Interfaces, error: 26 - Error Locating Server/Instance Specified)'
-
                 return await context.Users.ToListAsync();
             }
             catch (Exception ex)
@@ -75,7 +68,6 @@ namespace DAL.Repositories
                 if (entity == null)
                 {
                     logger.LogError("The User is null");
-                    //return new User();
                     throw new ArgumentNullException(nameof(entity), "The User is null");
                 }
                 return entity;
@@ -118,12 +110,7 @@ namespace DAL.Repositories
                 }
                 await DeleteAsync(entity.Id);
                 await AddAsync(entity);
-                //UserToUpdate.Name = entity.Name;
-                //UserToUpdate.DepartmentCode = entity.DepartmentCode;
-                //UserToUpdate.CompanyCode = entity.CompanyCode;
-                //UserToUpdate.Price = entity.Price;
-                //UserToUpdate.Description = entity.Description;
-                //UserToUpdate.Picture = entity.Picture;
+
 
                 await context.SaveChangesAsync();
                 return entity;

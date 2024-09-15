@@ -29,13 +29,13 @@ namespace BLL.Services
             this.mapper = config.CreateMapper();
         }
 
-        public async Task<CommentDto> AddNewCommentAsync(CommentDto e)
+        public async Task<GetCommentDTO> AddNewCommentAsync(CreateCommentDTO e)
         {
             try
             {
                 var map = mapper.Map<Comment>(e);
                 var answer=await CommentRepository.AddAsync(map);
-                return mapper.Map<CommentDto>(answer);
+                return mapper.Map<GetCommentDTO>(answer);
             }
             catch (Exception ex)
             {
@@ -57,12 +57,12 @@ namespace BLL.Services
             }
         }
 
-        public async Task<List<CommentDto>> GetAllCommentsAsync()
+        public async Task<List<GetCommentDTO>> GetAllCommentsAsync()
         {
             try
             {
                 var answer= await CommentRepository.GetAllAsync();
-                return mapper.Map<List<CommentDto>>(answer);    
+                return mapper.Map<List<GetCommentDTO>>(answer);    
             }
             catch (Exception ex)
             {
@@ -71,12 +71,12 @@ namespace BLL.Services
             }
         }
 
-        public async Task<CommentDto> GetByIdAsync(int id)
+        public async Task<GetCommentDTO> GetByIdAsync(int id)
         {
             try
             {
                 var answer= await CommentRepository.GetByIdAsync(id);
-                return mapper.Map<CommentDto>(answer);
+                return mapper.Map<GetCommentDTO>(answer);
             }
             catch (Exception ex)
             {
@@ -85,13 +85,13 @@ namespace BLL.Services
             }
         }
 
-        public async Task<CommentDto> UpdateAsync(CommentDto e)
+        public async Task<GetCommentDTO> UpdateAsync(CreateCommentDTO e)
         {
             try
             {
                 var map= mapper.Map<Comment>(e);
                 var answer= await CommentRepository.UpdateAsync(map);
-                return mapper.Map<CommentDto>(answer);
+                return mapper.Map<GetCommentDTO>(answer);
             }
             catch(Exception ex)
             {

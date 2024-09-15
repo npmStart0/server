@@ -30,13 +30,13 @@ namespace BLL.Services
             //this.mapper = mapper;
         }
 
-        public async Task<UserDto> AddNewUserAsync(UserDto e)
+        public async Task<UserDTO> AddNewUserAsync(UserDTO e)
         {
             try
             {
-                var map = mapper.Map<UserDto, User>(e);
+                var map = mapper.Map<UserDTO, User>(e);
                 var answer = await UserRepository.AddAsync(map);
-                UserDto v = mapper.Map<User, UserDto>(answer);
+                UserDTO v = mapper.Map<User, UserDTO>(answer);
                 return v;
             }
             catch (Exception ex)
@@ -59,12 +59,12 @@ namespace BLL.Services
             }
         }
 
-        public async Task<List<UserDto>> GetAllUsersAsync()
+        public async Task<List<UserDTO>> GetAllUsersAsync()
         {
             try
             {
                 var answer= await UserRepository.GetAllAsync();
-                return mapper.Map<List<UserDto>>(answer);    
+                return mapper.Map<List<UserDTO>>(answer);    
             }
             catch (Exception ex)
             {
@@ -73,12 +73,12 @@ namespace BLL.Services
             }
         }
 
-        public async Task<UserDto> GetByIdAsync(int id)
+        public async Task<UserDTO> GetByIdAsync(int id)
         {
             try
             {
                 var answer= await UserRepository.GetByIdAsync(id);
-                return mapper.Map<UserDto>(answer);
+                return mapper.Map<UserDTO>(answer);
             }
             catch (Exception ex)
             {
@@ -87,12 +87,12 @@ namespace BLL.Services
             }
         }
 
-        public async Task<UserDto> GetByEmailAndByPasswordAsync(string email, string password)
+        public async Task<UserDTO> GetByEmailAndByPasswordAsync(string email, string password)
         {
             try
             {
                 var answer = await UserRepository.GetByEmailAndByPasswordAsync(email, password);
-                return mapper.Map<UserDto>(answer);
+                return mapper.Map<UserDTO>(answer);
             }
             catch (Exception ex)
             {
@@ -101,13 +101,13 @@ namespace BLL.Services
             }
         }
 
-        public async Task<UserDto> UpdateAsync(UserDto e)
+        public async Task<UserDTO> UpdateAsync(UserDTO e)
         {
             try
             {
-                var map= mapper.Map<UserDto, User>(e);
+                var map= mapper.Map<UserDTO, User>(e);
                 var answer= await UserRepository.UpdateAsync(map);
-                return mapper.Map<User, UserDto>(answer);
+                return mapper.Map<User, UserDTO>(answer);
             }
             catch(Exception ex)
             {

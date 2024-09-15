@@ -2,11 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using DAL.Interfaces;
 using DAL.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -59,8 +55,8 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
                 logger.LogError("failed to get Subjects" + ex.Message.ToString());
-                //throw new Exception("failed in dal.subject "+ex.Message.ToString());
-                throw;
+
+                throw new Exception("failed in dal.subject "+ex.Message.ToString());
             }
         }
 
@@ -95,12 +91,6 @@ namespace DAL.Repositories
                 }
                 await DeleteAsync(entity.Id);
                 await AddAsync(entity);
-                //SubjectToUpdate.Name = entity.Name;
-                //SubjectToUpdate.DepartmentCode = entity.DepartmentCode;
-                //SubjectToUpdate.CompanyCode = entity.CompanyCode;
-                //SubjectToUpdate.Price = entity.Price;
-                //SubjectToUpdate.Description = entity.Description;
-                //SubjectToUpdate.Picture = entity.Picture;
 
                 await context.SaveChangesAsync();
                 return entity;

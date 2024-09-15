@@ -9,10 +9,10 @@ namespace BLL.Interfaces
 {
     public interface ISubjectService
     {
-        Task<SubjectDto> AddNewSubjectAsync(SubjectDto Subject);
+        Task<SubjectDTO> AddNewSubjectAsync(SubjectDTO Subject);
         Task DeleteAsync(int id);
-        Task<SubjectDto> GetByIdAsync(int id);
-        Task<List<SubjectDto>> GetAllSubjectsAsync();
-        Task<SubjectDto> UpdateAsync(SubjectDto Subject);
+        Task<SubjectDTO> GetByIdAsync(int id);
+        Task<List<SubjectDTO>> GetAllSubjectsAsync();
+        Task<SubjectDTO> UpdateAsync(SubjectDTO Subject);
     }
 }
