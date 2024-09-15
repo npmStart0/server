@@ -2,11 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using DAL.Interfaces;
 using DAL.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -53,7 +49,19 @@ namespace DAL.Repositories
         {
             try
             {
-                return await context.Comments.ToListAsync();
+                var comments = context.Comments
+                    .Include(c => c.User)
+                    .Include(c => c.Discussion);
+
+                if (comments != null)
+                {
+                    return await comments.ToListAsync();
+                }
+                else
+                {
+                    throw new Exception("Comments not found");
+                }
+                
             }
             catch (Exception ex)
             {
@@ -66,13 +74,19 @@ namespace DAL.Repositories
         {
             try
             {
-                var entity = await context.Comments.FirstOrDefaultAsync(p => p.Id == Id);
-                if (entity == null)
+                var comment = context.Comments
+                .Include(c => c.User)
+                .Include(c => c.Discussion) 
+                .FirstOrDefault(c => c.Id == Id);
+
+                if (comment != null)
                 {
-                    logger.LogError("The Comment is null");
-                    return new Comment();
+                    return comment;
                 }
-                return entity;
+                else 
+                {
+                    throw new Exception("Comment not found");
+                }
             }
             catch (Exception ex)
             {
@@ -93,12 +107,7 @@ namespace DAL.Repositories
                 }
                 await DeleteAsync(entity.Id);
                 await AddAsync(entity);
-                //CommentToUpdate.Name = entity.Name;
-                //CommentToUpdate.DepartmentCode = entity.DepartmentCode;
-                //CommentToUpdate.CompanyCode = entity.CompanyCode;
-                //CommentToUpdate.Price = entity.Price;
-                //CommentToUpdate.Description = entity.Description;
-                //CommentToUpdate.Picture = entity.Picture;
+
 
                 await context.SaveChangesAsync();
                 return entity;

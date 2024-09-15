@@ -29,13 +29,13 @@ namespace BLL.Services
             this.mapper = config.CreateMapper();
         }
 
-        public async Task<DiscussionDto> AddNewDiscussionAsync(DiscussionDto e)
+        public async Task<GetDiscussionDTO> AddNewDiscussionAsync(CreateDiscussionDTO e)
         {
             try
             {
                 var map = mapper.Map<Discussion>(e);
                 var answer=await DiscussionRepository.AddAsync(map);
-                return mapper.Map<DiscussionDto>(answer);
+                return mapper.Map<GetDiscussionDTO>(answer);
             }
             catch (Exception ex)
             {
@@ -59,12 +59,12 @@ namespace BLL.Services
             }
         }
 
-        public async Task<List<DiscussionDto>> GetAllDiscussionsAsync()
+        public async Task<List<GetDiscussionDTO>> GetAllDiscussionsAsync()
         {
             try
             {
                 var answer= await DiscussionRepository.GetAllAsync();
-                return mapper.Map<List<DiscussionDto>>(answer);    
+                return mapper.Map<List<GetDiscussionDTO>>(answer);    
             }
             catch (Exception ex)
             {
@@ -74,12 +74,12 @@ namespace BLL.Services
             }
         }
 
-        public async Task<DiscussionDto> GetByIdAsync(int id)
+        public async Task<GetDiscussionDTO> GetByIdAsync(int id)
         {
             try
             {
                 var answer= await DiscussionRepository.GetByIdAsync(id);
-                return mapper.Map<DiscussionDto>(answer);
+                return mapper.Map<GetDiscussionDTO>(answer);
             }
             catch (Exception ex)
             {
@@ -89,13 +89,13 @@ namespace BLL.Services
             }
         }
 
-        public async Task<DiscussionDto> UpdateAsync(DiscussionDto e)
+        public async Task<GetDiscussionDTO> UpdateAsync(CreateDiscussionDTO e)
         {
             try
             {
                 var map= mapper.Map<Discussion>(e);
                 var answer= await DiscussionRepository.UpdateAsync(map);
-                return mapper.Map<DiscussionDto>(answer);
+                return mapper.Map<GetDiscussionDTO>(answer);
             }
             catch(Exception ex)
             {

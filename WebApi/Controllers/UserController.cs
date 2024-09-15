@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<List<UserDto>> GetAll()
+        public async Task<List<UserDTO>> GetAll()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace WebApi.Controllers
             }
         }
         [HttpGet("{id}")]
-        public async Task<UserDto> GetbyId(int id)
+        public async Task<UserDTO> GetbyId(int id)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{email}/{password}")]
-        public async Task<UserDto> GetByEmailAndPassword(string email, string password)
+        public async Task<UserDTO> GetByEmailAndPassword(string email, string password)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace WebApi.Controllers
         }
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task Add(UserDto newUser)
+        public async Task Add(UserDTO newUser)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace WebApi.Controllers
             }
         }
         [HttpPut]
-        public async Task<UserDto> Update(UserDto e)
+        public async Task<UserDTO> Update(UserDTO e)
         {
             try
             {

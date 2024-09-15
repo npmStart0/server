@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<List<SubjectDto>> GetAll()
+        public async Task<List<SubjectDTO>> GetAll()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace WebApi.Controllers
             }
         }
         [HttpGet("{id}")]
-        public async Task<SubjectDto> GetbyId(int id)
+        public async Task<SubjectDTO> GetbyId(int id)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task Add(SubjectDto newSubject)
+        public async Task Add(SubjectDTO newSubject)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace WebApi.Controllers
             }
         }
         [HttpPut]
-        public async Task<SubjectDto> Update(SubjectDto e)
+        public async Task<SubjectDTO> Update(SubjectDTO e)
         {
             try
             {

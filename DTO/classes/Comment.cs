@@ -7,14 +7,10 @@ using System.Threading.Tasks;
 
 namespace DTO.classes
 {
-    public class CommentDto
+    public class CommentDTO 
     {
         public int Id { get; set; }
         public string Text { get; set; }
-        public int UserId { get; set; }
-        public string User { get; set; }
-        public int DiscussionId { get; set; }
-        public string Discussion { get; set; }
-
+        public DateTime Date { get; set; }
     }
 }

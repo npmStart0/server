@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<List<DiscussionDto>> GetAll()
+        public async Task<List<GetDiscussionDTO>> GetAll()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace WebApi.Controllers
             }
         }
         [HttpGet("{id}")]
-        public async Task<DiscussionDto> GetbyId(int id)
+        public async Task<GetDiscussionDTO> GetbyId(int id)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task Add(DiscussionDto newDiscussion)
+        public async Task Add(CreateDiscussionDTO newDiscussion)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace WebApi.Controllers
             }
         }
         [HttpPut]
-        public async Task<DiscussionDto> Update(DiscussionDto e)
+        public async Task<GetDiscussionDTO> Update(CreateDiscussionDTO e)
         {
             try
             {

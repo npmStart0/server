@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<List<CommentDto>> GetAll()
+        public async Task<List<GetCommentDTO>> GetAll()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace WebApi.Controllers
             }
         }
         [HttpGet("{id}")]
-        public async Task<CommentDto> GetbyId(int id)
+        public async Task<GetCommentDTO> GetbyId(int id)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task Add(CommentDto newComment)
+        public async Task Add(CreateCommentDTO newComment)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace WebApi.Controllers
             }
         }
         [HttpPut]
-        public async Task<CommentDto> Update(CommentDto e)
+        public async Task<GetCommentDTO> Update(CreateCommentDTO e)
         {
             try
             {

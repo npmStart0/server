@@ -2,11 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using DAL.Interfaces;
 using DAL.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -53,7 +49,20 @@ namespace DAL.Repositories
         {
             try
             {
-                return await context.Discussions.ToListAsync();
+                var discussion = context.Discussions
+                    .Include(d => d.Subject)
+                    .Include(d => d.User)
+                    .Include(c => c.Comments);
+
+                if (discussion != null)
+                {
+                    return await discussion.ToListAsync();
+                }
+                else
+                {
+                    throw new Exception("Discussions not found");
+                }
+
             }
             catch (Exception ex)
             {
@@ -66,13 +75,18 @@ namespace DAL.Repositories
         {
             try
             {
-                var entity = await context.Discussions.FirstOrDefaultAsync(p => p.Id == Id);
-                if (entity == null)
+                var discussion = context.Discussions
+                .Include(d => d.Subject)
+                .Include(d => d.User)
+                .Include(c => c.Comments)
+                .FirstOrDefault(d => d.Id == Id);
+
+                if (discussion == null)
                 {
                     logger.LogError("The Discussion is null");
-                    return new Discussion();
+                    throw new Exception("The Discussion is null");
                 }
-                return entity;
+                return discussion;
             }
             catch (Exception ex)
             {
@@ -93,12 +107,6 @@ namespace DAL.Repositories
                 }
                 await DeleteAsync(entity.Id);
                 await AddAsync(entity);
-                //DiscussionToUpdate.Name = entity.Name;
-                //DiscussionToUpdate.DepartmentCode = entity.DepartmentCode;
-                //DiscussionToUpdate.CompanyCode = entity.CompanyCode;
-                //DiscussionToUpdate.Price = entity.Price;
-                //DiscussionToUpdate.Description = entity.Description;
-                //DiscussionToUpdate.Picture = entity.Picture;
 
                 await context.SaveChangesAsync();
                 return entity;

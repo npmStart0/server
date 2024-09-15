@@ -9,11 +9,11 @@ namespace BLL.Interfaces
 {
     public interface IUserService
     {
-        Task<UserDto> AddNewUserAsync(UserDto User);
+        Task<UserDTO> AddNewUserAsync(UserDTO User);
         Task DeleteAsync(int id);
-        Task<UserDto> GetByIdAsync(int id);
-        Task<List<UserDto>> GetAllUsersAsync();
-        Task<UserDto> GetByEmailAndByPasswordAsync(string Email, string Password);
-        Task<UserDto> UpdateAsync(UserDto User);
+        Task<UserDTO> GetByIdAsync(int id);
+        Task<List<UserDTO>> GetAllUsersAsync();
+        Task<UserDTO> GetByEmailAndByPasswordAsync(string Email, string Password);
+        Task<UserDTO> UpdateAsync(UserDTO User);
     }
 }

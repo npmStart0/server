@@ -14,19 +14,17 @@ namespace DAL.Models
         public int Id { get; set; }
         [Required]
         public string Text { get; set; }
-
-        //[Required]
-        public virtual int? UserId { get; set; }
-        //public virtual User User { get; set; }
+        [Required]
+        
+        public virtual int UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
-
-
-
-        //[Required]
-        public virtual int? DiscussionId { get; set; }
+        
+        [Required]
+        public virtual int DiscussionId { get; set; }
         [ForeignKey("DiscussionId")]
         public virtual Discussion Discussion { get; set; }
 
+        public DateTime Date { get; set; }
     }
 }
