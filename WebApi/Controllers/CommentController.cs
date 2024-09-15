@@ -66,7 +66,7 @@ namespace WebApi.Controllers
 
 
             [HttpPost]
-            public async Task<IActionResult> Add([FromBody] CommentDto newComment)
+            public async Task<IActionResult> Add([FromBody] CreateCommentDTO newComment)
 
             {
                 try
@@ -92,7 +92,7 @@ namespace WebApi.Controllers
             }
 
             [HttpPut]
-            public async Task<IActionResult> Update([FromBody] CommentDto comment)
+            public async Task<IActionResult> Update([FromBody] CreateCommentDTO comment)
             {
                 try
                 {

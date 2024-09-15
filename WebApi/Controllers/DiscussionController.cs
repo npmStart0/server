@@ -62,7 +62,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] DiscussionDto newDiscussion)
+        public async Task<IActionResult> Add([FromBody] CreateDiscussionDTO newDiscussion)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] DiscussionDto discussion)
+        public async Task<IActionResult> Update([FromBody] CreateDiscussionDTO discussion)
         {
             try
             {
