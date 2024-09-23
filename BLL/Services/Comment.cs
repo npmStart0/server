@@ -99,5 +99,22 @@ namespace BLL.Services
                 throw;
             }
         }
+        public async Task<List<GetCommentDTO>> GetCommentsByDiscussionIdAsync(int discussionId)
+        {
+            try
+            {
+                // שליפת התגובות לפי DiscussionID מה-Repository
+                var comments = await CommentRepository.GetCommentsByDiscussionIdAsync(discussionId);
+
+                // מיפוי התגובות ל-DTO
+                return mapper.Map<List<GetCommentDTO>>(comments);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to get comments by discussionId {discussionId}: {ex.Message}");
+                throw;
+            }
+        }
+
     }
 }

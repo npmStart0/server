@@ -135,6 +135,28 @@ namespace WebApi.Controllers
                     return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
                 }
             }
+        [HttpGet("discussion/{discussionId}")]
+        public async Task<IActionResult> GetByDiscussionId(int discussionId)
+        {
+            try
+            {
+                var comments = await CommentService.GetCommentsByDiscussionIdAsync(discussionId);
+
+                if (comments == null || comments.Count == 0)
+                {
+                    return NotFound($"No comments found for discussion with ID {discussionId}");
+                }
+
+                return Ok(comments); 
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to get comments for discussion with ID {discussionId}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error"); 
+            }
         }
 
+
     }
+
+}

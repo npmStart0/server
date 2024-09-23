@@ -120,5 +120,13 @@ namespace DAL.Repositories
                 throw;
             }
         }
+        public async Task<List<Comment>> GetCommentsByDiscussionIdAsync(int discussionId)
+        {
+            return await context.Comments
+             .Include(c => c.User)  
+             .Include(c => c.Discussion)
+             .Where(c => c.DiscussionId == discussionId)
+             .ToListAsync();
+        }
     }
 }
