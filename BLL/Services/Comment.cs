@@ -99,12 +99,13 @@ namespace BLL.Services
                 throw;
             }
         }
+
         public async Task<List<GetCommentDTO>> GetCommentsByDiscussionIdAsync(int discussionId)
         {
             try
             {
                 var comments = await CommentRepository.GetCommentsByDiscussionIdAsync(discussionId);
-               return mapper.Map<List<GetCommentDTO>>(comments);
+                return mapper.Map<List<GetCommentDTO>>(comments);
             }
             catch (Exception ex)
             {

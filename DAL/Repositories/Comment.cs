@@ -120,6 +120,7 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
         public async Task<List<Comment>> GetCommentsByDiscussionIdAsync(int discussionId)
         {
             return await context.Comments
