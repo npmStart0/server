@@ -14,14 +14,14 @@ namespace WebApi.Controllers
     public class DiscussionController : ControllerBase
     {
         readonly IDiscussionService DiscussionService;
-        private readonly IUserService _userService;
-        private readonly ISubjectService _subService;
-        private ILogger<string> logger;
-        public DiscussionController(IDiscussionService service,IUserService userService, ISubjectService subService, ILogger<string> logger)
+        readonly IUserService userService;
+        readonly ISubjectService subService;
+        ILogger<string> logger;
+        public DiscussionController(IDiscussionService service,IUserService uService, ISubjectService sService, ILogger<string> logger)
         {
             DiscussionService = service;
-            _userService= userService;
-            _subService= subService;
+            userService= uService;
+            subService= sService;
             this.logger = logger;
         }
 
@@ -75,12 +75,12 @@ namespace WebApi.Controllers
                     return BadRequest("Discussion cannot be null"); // HTTP 400
                 }
 
-                var userExists = await _userService.GetByIdAsync(newDiscussion.UserID);
+                var userExists = await userService.GetByIdAsync(newDiscussion.UserID);
                 if (userExists == null)
                 {
                     return BadRequest("User does not exist."); // HTTP 400 Bad Request
                 }
-                var subExists = await _subService.GetByIdAsync(newDiscussion.SubjectId);
+                var subExists = await subService.GetByIdAsync(newDiscussion.SubjectId);
                 if (userExists == null)
                 {
                     return BadRequest("Subject does not exist."); // HTTP 400 Bad Request

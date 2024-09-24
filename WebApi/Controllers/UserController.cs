@@ -14,7 +14,7 @@ namespace WebApi.Controllers
     public class UserController : ControllerBase
     {
         readonly IUserService UserService;
-        private ILogger<string> logger;
+        ILogger<string> logger;
         public UserController(IUserService service, ILogger<string> logger)
         {
             UserService = service;

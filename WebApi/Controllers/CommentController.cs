@@ -13,17 +13,18 @@ namespace WebApi.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly IUserService _userService;
-        private readonly ICommentService _commentService;
-        private readonly IDiscussionService _discussionService;
-        private readonly ILogger<CommentController> _logger;
+        readonly IUserService userService;
+        readonly ICommentService commentService;
+        readonly IDiscussionService discussionService;
+        readonly ILogger<CommentController> logger;
 
-        public CommentController(ICommentService commentService, IUserService userService, IDiscussionService discussionService, ILogger<CommentController> logger)
+        public CommentController(ICommentService cService, IUserService uService,
+            IDiscussionService dService, ILogger<CommentController> logService)
         {
-            _userService = userService;
-            _commentService = commentService;
-            _discussionService = discussionService;
-            _logger = logger;
+            userService = uService;
+            commentService = cService;
+            discussionService = dService;
+            logger = logService;
         }
 
         [HttpGet]
@@ -31,43 +32,22 @@ namespace WebApi.Controllers
         {
             try
             {
-                var comments = await _commentService.GetAllCommentsAsync();
+                var comments = await commentService.GetAllCommentsAsync();
                 return Ok(comments); // HTTP 200 OK
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to get all comments: " + ex.Message);
+                logger.LogError("Failed to get all comments: " + ex.Message);
                 return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
-            }
-
-        [HttpGet("{discussionId}")]
-        public async Task<IActionResult> GetByDiscussionId(int discussionId)
-        {
-            try
-            {
-                var comments = await CommentService.GetCommentsByDiscussionIdAsync(discussionId);
-
-                if (comments == null || comments.Count == 0)
-                {
-                    return NotFound($"No comments found for discussion with ID {discussionId}");
-                }
-
-                return Ok(comments); 
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"Failed to get comments for discussion with ID {discussionId}: {ex.Message}");
-                return StatusCode(500, "Internal Server Error"); 
             }
         }
 
-<<<<<<< HEAD
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                var comment = await _commentService.GetByIdAsync(id);
+                var comment = await commentService.GetByIdAsync(id);
                 if (comment == null)
                 {
                     return NotFound($"Comment with ID {id} not found"); // HTTP 404 Not Found
@@ -76,12 +56,12 @@ namespace WebApi.Controllers
             }
             catch (ArgumentException ex)
             {
-                _logger.LogError($"Invalid argument: {ex.Message}");
+                logger.LogError($"Invalid argument: {ex.Message}");
                 return BadRequest(ex.Message); // HTTP 400 Bad Request
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to get comment with ID {id}: {ex.Message}");
+                logger.LogError($"Failed to get comment with ID {id}: {ex.Message}");
                 return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
@@ -97,28 +77,28 @@ namespace WebApi.Controllers
                 }
 
                 // check if user and discussion exsits
-                var userExists = await _userService.GetByIdAsync(newComment.UserId);
+                var userExists = await userService.GetByIdAsync(newComment.UserId);
                 if (userExists==null)
                 {
                     return BadRequest("User does not exist."); // HTTP 400 Bad Request
                 }
-                var discussionExists = await _discussionService.GetByIdAsync(newComment.DiscussionId);
+                var discussionExists = await discussionService.GetByIdAsync(newComment.DiscussionId);
                 if (discussionExists == null)
                 {
                     return BadRequest("discussion does not exist."); // HTTP 400 Bad Request
                 }
 
-                await _commentService.AddNewCommentAsync(newComment);
+                await commentService.AddNewCommentAsync(newComment);
                 return CreatedAtAction(nameof(GetById), new { id = newComment.Id }, newComment); // HTTP 201 Created
             }
             catch (ArgumentException ex)
             {
-                _logger.LogError("Invalid argument: " + ex.Message);
+                logger.LogError("Invalid argument: " + ex.Message);
                 return BadRequest(ex.Message); // HTTP 400 Bad Request
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to add comment: " + ex.Message);
+                logger.LogError("Failed to add comment: " + ex.Message);
                 return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
@@ -133,44 +113,40 @@ namespace WebApi.Controllers
                     return BadRequest("Comment cannot be null"); // HTTP 400 Bad Request
                 }
 
-                var updatedComment = await _commentService.UpdateAsync(comment);
+                var updatedComment = await commentService.UpdateAsync(comment);
                 return Ok(updatedComment); // HTTP 200 OK
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogError("Comment not found: " + ex.Message);
+                logger.LogError("Comment not found: " + ex.Message);
                 return NotFound(ex.Message); // HTTP 404 Not Found
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to update comment: " + ex.Message);
+                logger.LogError("Failed to update comment: " + ex.Message);
                 return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            try
+            [HttpDelete("{id}")]
+            public async Task<IActionResult> Delete(int id)
             {
-                await _commentService.DeleteAsync(id);
-                return NoContent(); // HTTP 204 No Content
-            }
-            catch (ArgumentNullException ex)
-            {
-                _logger.LogError("Comment not found: " + ex.Message);
-                return NotFound(ex.Message); // HTTP 404 Not Found
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to delete comment: " + ex.Message);
-                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
+                try
+                {
+                    await commentService.DeleteAsync(id);
+                    return NoContent(); // HTTP 204 No Content
+                }
+                catch (ArgumentNullException ex)
+                {
+                    logger.LogError("Comment not found: " + ex.Message);
+                    return NotFound(ex.Message); // HTTP 404 Not Found
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError("Failed to delete comment: " + ex.Message);
+                    return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
+                }
             }
         }
-    }
-=======
 
     }
-
->>>>>>> 9a62b7be341259c3625e9f3811aaf962b0b92384
-}
