@@ -39,8 +39,29 @@ namespace WebApi.Controllers
                 _logger.LogError("Failed to get all comments: " + ex.Message);
                 return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
+
+        [HttpGet("{discussionId}")]
+        public async Task<IActionResult> GetByDiscussionId(int discussionId)
+        {
+            try
+            {
+                var comments = await CommentService.GetCommentsByDiscussionIdAsync(discussionId);
+
+                if (comments == null || comments.Count == 0)
+                {
+                    return NotFound($"No comments found for discussion with ID {discussionId}");
+                }
+
+                return Ok(comments); 
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to get comments for discussion with ID {discussionId}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error"); 
+            }
         }
 
+<<<<<<< HEAD
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -147,4 +168,9 @@ namespace WebApi.Controllers
             }
         }
     }
+=======
+
+    }
+
+>>>>>>> 9a62b7be341259c3625e9f3811aaf962b0b92384
 }

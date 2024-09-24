@@ -15,5 +15,6 @@ namespace BLL.Interfaces
         Task<GetCommentDTO> GetByIdAsync(int id);
         Task<List<GetCommentDTO>> GetAllCommentsAsync();
         Task<GetCommentDTO> UpdateAsync(CreateCommentDTO Comment);
+        Task<List<GetCommentDTO>> GetCommentsByDiscussionIdAsync(int discussionId);
     }
 }
