@@ -103,11 +103,8 @@ namespace BLL.Services
         {
             try
             {
-                // שליפת התגובות לפי DiscussionID מה-Repository
                 var comments = await CommentRepository.GetCommentsByDiscussionIdAsync(discussionId);
-
-                // מיפוי התגובות ל-DTO
-                return mapper.Map<List<GetCommentDTO>>(comments);
+               return mapper.Map<List<GetCommentDTO>>(comments);
             }
             catch (Exception ex)
             {

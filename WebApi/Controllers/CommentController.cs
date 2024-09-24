@@ -135,7 +135,8 @@ namespace WebApi.Controllers
                     return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
                 }
             }
-        [HttpGet("discussion/{discussionId}")]
+
+        [HttpGet("{discussionId}")]
         public async Task<IActionResult> GetByDiscussionId(int discussionId)
         {
             try
