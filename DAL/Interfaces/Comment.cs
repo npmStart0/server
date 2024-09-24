@@ -14,5 +14,6 @@ namespace DAL.Interfaces
         Task<Comment> UpdateAsync(Comment entity);
         Task<Comment> AddAsync(Comment entity);
         Task DeleteAsync(int id);
+        Task<List<Comment>> GetCommentsByDiscussionIdAsync(int discussionId);
     }
 }
