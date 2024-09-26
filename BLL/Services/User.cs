@@ -34,6 +34,7 @@ namespace BLL.Services
         {
             try
             {
+                e.Id = 0;
                 var map = mapper.Map<UserDTO, User>(e);
                 var answer = await UserRepository.AddAsync(map);
                 UserDTO v = mapper.Map<User, UserDTO>(answer);

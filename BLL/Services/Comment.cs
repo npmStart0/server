@@ -33,6 +33,7 @@ namespace BLL.Services
         {
             try
             {
+                e.Id = 0;
                 var map = mapper.Map<Comment>(e);
                 var answer=await CommentRepository.AddAsync(map);
                 return mapper.Map<GetCommentDTO>(answer);

@@ -33,6 +33,7 @@ namespace BLL.Services
         {
             try
             {
+                e.Id = 0;
                 var map = mapper.Map<Subject>(e);
                 var answer=await SubjectRepository.AddAsync(map);
                 return mapper.Map<SubjectDTO>(answer);
