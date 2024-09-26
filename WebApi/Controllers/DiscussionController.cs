@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BLL.Interfaces;
+using BLL.Validations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
@@ -14,20 +15,20 @@ namespace WebApi.Controllers
     public class DiscussionController : ControllerBase
     {
         readonly IDiscussionService DiscussionService;
-        readonly IUserService userService;
+        readonly UserValidations userValidations;
         readonly ISubjectService subService;
         ILogger<string> logger;
-        public DiscussionController(IDiscussionService service,IUserService uService, ISubjectService sService, ILogger<string> logger)
+
+        public DiscussionController(IDiscussionService service, UserValidations usValidate, ISubjectService sService, ILogger<string> logger)
         {
             DiscussionService = service;
-            userService= uService;
-            subService= sService;
+            userValidations = usValidate;
+            subService = sService;
             this.logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
-
         {
             try
             {
@@ -75,16 +76,18 @@ namespace WebApi.Controllers
                     return BadRequest("Discussion cannot be null"); // HTTP 400
                 }
 
-                var userExists = await userService.GetByIdAsync(newDiscussion.UserID);
-                if (userExists == null)
+                var userExists = await userValidations.UserExistsAsync(newDiscussion.UserID);
+                if (!userExists)
                 {
                     return BadRequest("User does not exist."); // HTTP 400 Bad Request
                 }
+
                 var subExists = await subService.GetByIdAsync(newDiscussion.SubjectId);
-                if (userExists == null)
+                if (subExists == null) // שינויים כאן
                 {
                     return BadRequest("Subject does not exist."); // HTTP 400 Bad Request
                 }
+
                 await DiscussionService.AddNewDiscussionAsync(newDiscussion);
                 return CreatedAtAction(nameof(GetById), new { id = newDiscussion.Id }, newDiscussion); // HTTP 201 Created
             }
@@ -146,4 +149,3 @@ namespace WebApi.Controllers
         }
     }
 }
-

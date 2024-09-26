@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BLL.Interfaces;
+using BLL.Validations; 
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
@@ -13,18 +14,20 @@ namespace WebApi.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        readonly IUserService userService;
         readonly ICommentService commentService;
         readonly IDiscussionService discussionService;
         readonly ILogger<CommentController> logger;
+        readonly UserValidations userValidations; 
+        readonly DiscussionValidations disucssionValidations;
 
-        public CommentController(ICommentService cService, IUserService uService,
-            IDiscussionService dService, ILogger<CommentController> logService)
+        public CommentController(ICommentService cService,
+            IDiscussionService dService, ILogger<CommentController> logService, UserValidations usValidate, DiscussionValidations disValidations)
         {
-            userService = uService;
             commentService = cService;
             discussionService = dService;
             logger = logService;
+            userValidations = usValidate; // אתחול של UserValidations
+            disucssionValidations = disValidations;
         }
 
         [HttpGet]
@@ -76,16 +79,16 @@ namespace WebApi.Controllers
                     return BadRequest("Comment cannot be null"); // HTTP 400 Bad Request
                 }
 
-                // check if user and discussion exsits
-                var userExists = await userService.GetByIdAsync(newComment.UserId);
-                if (userExists==null)
+                var userExists = await userValidations.UserExistsAsync(newComment.UserId);
+                if (!userExists)
                 {
                     return BadRequest("User does not exist."); // HTTP 400 Bad Request
                 }
-                var discussionExists = await discussionService.GetByIdAsync(newComment.DiscussionId);
-                if (discussionExists == null)
+
+                var discussionExists = await disucssionValidations.ExistsAsync(newComment.DiscussionId);
+                if (!discussionExists)
                 {
-                    return BadRequest("discussion does not exist."); // HTTP 400 Bad Request
+                    return BadRequest("Discussion does not exist."); // HTTP 400 Bad Request
                 }
 
                 await commentService.AddNewCommentAsync(newComment);
@@ -128,25 +131,24 @@ namespace WebApi.Controllers
             }
         }
 
-            [HttpDelete("{id}")]
-            public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
             {
-                try
-                {
-                    await commentService.DeleteAsync(id);
-                    return NoContent(); // HTTP 204 No Content
-                }
-                catch (ArgumentNullException ex)
-                {
-                    logger.LogError("Comment not found: " + ex.Message);
-                    return NotFound(ex.Message); // HTTP 404 Not Found
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError("Failed to delete comment: " + ex.Message);
-                    return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
-                }
+                await commentService.DeleteAsync(id);
+                return NoContent(); // HTTP 204 No Content
+            }
+            catch (ArgumentNullException ex)
+            {
+                logger.LogError("Comment not found: " + ex.Message);
+                return NotFound(ex.Message); // HTTP 404 Not Found
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Failed to delete comment: " + ex.Message);
+                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
-
     }
+}
