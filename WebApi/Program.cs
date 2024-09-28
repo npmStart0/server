@@ -1,4 +1,4 @@
-using BLL.Interfaces;
+﻿using BLL.Interfaces;
 using BLL.Services;
 using DAL.Interfaces;
 using DAL.Models;
@@ -8,6 +8,16 @@ using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsDevelopment())
+{
+    DotEnv.Fluent()
+                .WithEnvFiles("../.env.local")
+                .Load();
+
+}
+
+string clientUrl = Environment.GetEnvironmentVariable("CLIENT_URL");
 
 //builder.Configuration.AddEnvironmentVariables();
 //DotEnv.Load(options: new DotEnvOptions(envFilePaths: ["../.env.local"]));
@@ -44,7 +54,7 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder
-            .AllowAnyOrigin()
+            .WithOrigins(clientUrl)
             .AllowAnyHeader()
             .AllowAnyMethod();
         });
@@ -59,24 +69,7 @@ app.UseSwagger();
     app.UseSwaggerUI();
 //}
 
-app.UseCors(builder =>
-{
-    builder
-    .AllowAnyOrigin()
-    .AllowAnyHeader()
-    .AllowAnyMethod();
-    ;
-});
-
-app.UseCors(builder =>
-{
-    builder
-    .AllowAnyOrigin()
-    .AllowAnyHeader()
-    .AllowAnyMethod();
-    ;
-});
-
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
