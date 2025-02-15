@@ -86,6 +86,12 @@ namespace BLL.Services
             }
         }
 
+        public async Task<List<GetCommentDTO>> GetListCommentByIdDiscussionAsync(int id)
+        {
+           var answer = await DiscussionRepository.GetListCommentByIdDiscussionAsync(id);
+            return mapper.Map<List<GetCommentDTO>>(answer);
+        }
+
         public async Task<GetDiscussionDTO> UpdateAsync(CreateDiscussionDTO e)
         {
             try

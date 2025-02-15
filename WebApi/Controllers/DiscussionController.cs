@@ -67,6 +67,29 @@ namespace WebApi.Controllers
                 return StatusCode(500, "Internal Server Error"); // HTTP 500
             }
         }
+        [HttpGet("GetListComment/{id}")]
+        public async Task<IActionResult> GetListCommentById(int id)
+        {
+            try
+            {
+                var comment = await DiscussionService.GetListCommentByIdDiscussionAsync(id);
+                if (comment == null)
+                {
+                    return NotFound($"Discussion with ID {id} not found"); // HTTP 404
+                }
+                return Ok(comment); // HTTP 200 OK
+            }
+            catch (ArgumentException ex)
+            {
+                logger.LogError($"Invalid argument: {ex.Message}");
+                return BadRequest(ex.Message); // HTTP 400
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to get discussion with ID {id}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error"); // HTTP 500
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateDiscussionDTO newDiscussion)

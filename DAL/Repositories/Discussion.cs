@@ -94,6 +94,33 @@ namespace DAL.Repositories
                 throw;
             }
         }
+        public async Task<List<Comment>> GetListCommentByIdDiscussionAsync(int Id)
+        {
+            try
+            {
+                var discussion = await GetByIdAsync(Id);
+                if (discussion == null)
+                {
+                    throw new ArgumentNullException(nameof(discussion), "The Id Discussion is null");
+                }
+                else
+                {
+                    List<Comment> comments = new List<Comment>();
+                    foreach (var item in discussion.Comments)
+                    {
+
+                        if (item.DiscussionId == Id)
+                            comments.Add(item);
+                    }
+                    return discussion.Comments.Where(item => item.DiscussionId == Id).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("failed to get Comment To Discussion" + ex.Message.ToString());
+                throw;
+            }
+        }
 
         public async Task<Discussion> UpdateAsync(Discussion entity)
         {

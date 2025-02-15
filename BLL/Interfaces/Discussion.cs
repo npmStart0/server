@@ -12,6 +12,7 @@ namespace BLL.Interfaces
         Task<GetDiscussionDTO> AddNewDiscussionAsync(CreateDiscussionDTO Discussion);
         Task DeleteAsync(int id);
         Task<GetDiscussionDTO> GetByIdAsync(int id);
+        Task<List<GetCommentDTO>> GetListCommentByIdDiscussionAsync(int id);
         Task<List<GetDiscussionDTO>> GetAllDiscussionsAsync();
         Task<GetDiscussionDTO> UpdateAsync(CreateDiscussionDTO Discussion);
     }
