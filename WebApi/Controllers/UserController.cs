@@ -27,7 +27,7 @@ namespace WebApi.Controllers
 
         // קבלת כל המשתמשים (למנהל בלבד)
         [HttpGet]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             try
