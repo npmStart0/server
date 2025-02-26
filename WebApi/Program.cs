@@ -9,11 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Configuration.AddEnvironmentVariables();
-//DotEnv.Load(options: new DotEnvOptions(envFilePaths: ["../.env.local"]));
+#if DEBUG
+Env.Load("../.env.local");
+#endif
 
-//builder.Services.AddDbContext<MyDbContext>(options => options.UseMySql("server=127.0.0.1;uid=root;pwd=1234;database=npm;SslMode=Required", new MySqlServerVersion(new Version(8, 0, 21))));
-//builder.Services.AddDbContext<MyDbContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("DB_CONNECTION"), new MySqlServerVersion(new Version(8, 0, 21))));
+string clientUrl = Env.GetString("CLIENT_URL");
+Console.WriteLine($"CLIENT_URL: {clientUrl}");
+
+// Configure DbContext
 builder.Services.AddDbContext<MyDbContext>();
 
 

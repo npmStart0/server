@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Repositories;
 
 namespace BLL.Services
 {
@@ -115,5 +116,11 @@ namespace BLL.Services
                 throw;
             }
         }
+        public async Task<IEnumerable<UserDTO>> GetPendingUsersAsync()
+        {
+            var pendingUsers = await UserRepository.GetPendingUsersAsync();
+            return mapper.Map<IEnumerable<UserDTO>>(pendingUsers);
+        }
+
     }
 }
