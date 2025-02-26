@@ -13,19 +13,19 @@ using BLL.Services;
 
 namespace WebApi.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         readonly IUserService UserService;
-        private ILogger<string> logger;
+        ILogger<string> logger;
         public UserController(IUserService service, ILogger<string> logger)
         {
             UserService = service;
             this.logger = logger;
         }
 
-        // קבלת כל המשתמשים (למנהל בלבד)
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
@@ -87,7 +87,7 @@ namespace WebApi.Controllers
                     return NotFound("User not found with provided email and password"); // HTTP 404 Not Found
                 }
 
-                user.Status= UserStatus.LoggedIn; // שינוי סטטוס המשתמש למחובר
+                user.Status= UserStatus.LoggedIn; // ן¿½ן¿½ן¿½ן¿½ן¿½ ן¿½ן¿½ן¿½ן¿½ן¿½ ן¿½ן¿½ן¿½ן¿½ן¿½ן¿½ ן¿½ן¿½ן¿½ן¿½ן¿½ן¿½
                 await UserService.UpdateAsync(user);
                 return Ok(user); // HTTP 200 OK
             }
@@ -165,7 +165,6 @@ namespace WebApi.Controllers
         //        return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
         //    }
         //}
-        // קבלת כל המשתמשים שממתינים לאישור (למנהל בלבד)
         [HttpGet("pending")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPendingUsers()
@@ -182,7 +181,6 @@ namespace WebApi.Controllers
             }
         }
 
-        // אישור משתמש חדש (על ידי מנהל בלבד)
         [HttpPut("approve/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ApproveUser(int id)
@@ -195,7 +193,7 @@ namespace WebApi.Controllers
                     return NotFound($"User with ID {id} not found");
                 }
 
-                user.Status = UserStatus.Approved; // שינוי הסטטוס למאושר
+                user.Status = UserStatus.Approved; 
                 await UserService.UpdateAsync(user);
                 return Ok($"User with ID {id} has been approved.");
             }
