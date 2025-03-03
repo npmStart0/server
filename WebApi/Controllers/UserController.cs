@@ -13,19 +13,19 @@ using BLL.Services;
 
 namespace WebApi.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         readonly IUserService UserService;
-        private ILogger<string> logger;
+        ILogger<string> logger;
         public UserController(IUserService service, ILogger<string> logger)
         {
             UserService = service;
             this.logger = logger;
         }
 
-        // קבלת כל המשתמשים (למנהל בלבד)
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
@@ -136,7 +136,7 @@ namespace WebApi.Controllers
                     return NotFound($"User with ID {id} not found");
                 }
 
-                user.Status = UserStatus.Approved; // שינוי הסטטוס למאושר
+                user.Status = UserStatus.Approved; 
                 await UserService.UpdateAsync(user);
                 return Ok($"User with ID {id} has been approved.");
             }

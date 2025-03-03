@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Repositories;
 
 namespace BLL.Services
 {
@@ -33,6 +34,7 @@ namespace BLL.Services
         {
             try
             {
+                e.Id = 0;
                 var map = mapper.Map<Subject>(e);
                 var answer=await SubjectRepository.AddAsync(map);
                 return mapper.Map<SubjectDTO>(answer);
@@ -57,12 +59,22 @@ namespace BLL.Services
             }
         }
 
-        public async Task<List<SubjectDTO>> GetAllSubjectsAsync()
+        public async Task<List<GetSubjectDTO>> GetAllSubjectsAsync()
         {
             try
             {
-                var answer= await SubjectRepository.GetAllAsync();
-                return mapper.Map<List<SubjectDTO>>(answer);    
+                var subjects = await SubjectRepository.GetAllAsync();
+
+                var subjectsWithCount = subjects.Select(subject =>
+                {
+                    var dto = mapper.Map<GetSubjectDTO>(subject); 
+                    dto.DiscussionsCount = SubjectRepository.CountOfDiscussionsForSubject(subject.Id);
+                    return dto;
+                }).ToList();
+
+
+                return subjectsWithCount;
+            
             }
             catch (Exception ex)
             {
@@ -71,12 +83,18 @@ namespace BLL.Services
             }
         }
 
-        public async Task<SubjectDTO> GetByIdAsync(int id)
+        public async Task<GetByIDSubjectDTO> GetByIdAsync(int id)
         {
             try
             {
-                var answer= await SubjectRepository.GetByIdAsync(id);
-                return mapper.Map<SubjectDTO>(answer);
+                var answer = await SubjectRepository.GetByIdAsync(id);
+                var dto = mapper.Map<GetByIDSubjectDTO>(answer);
+
+                List<Discussion> discussions = await SubjectRepository.ListOfDiscussionsForSubject(id);
+                List<GetDiscussionDTO> discussionsDTO=mapper.Map<List<GetDiscussionDTO>>(discussions);
+                dto.Discussions =discussionsDTO ;
+
+                return dto;
             }
             catch (Exception ex)
             {

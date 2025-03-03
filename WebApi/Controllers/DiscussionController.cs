@@ -3,27 +3,34 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BLL.Interfaces;
+using BLL.Validations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.Cors;
 
 namespace WebApi.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class DiscussionController : ControllerBase
     {
         readonly IDiscussionService DiscussionService;
-        private ILogger<string> logger;
-        public DiscussionController(IDiscussionService service, ILogger<string> logger)
+        readonly UserValidations userValidations;
+        readonly ISubjectService subService;
+        ILogger<string> logger;
+
+        public DiscussionController(IDiscussionService service, UserValidations usValidate, ISubjectService sService, ILogger<string> logger)
         {
             DiscussionService = service;
+            userValidations = usValidate;
+            subService = sService;
             this.logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
-
         {
             try
             {
@@ -69,6 +76,18 @@ namespace WebApi.Controllers
                 if (newDiscussion == null)
                 {
                     return BadRequest("Discussion cannot be null"); // HTTP 400
+                }
+
+                var userExists = await userValidations.UserExistsAsync(newDiscussion.UserID);
+                if (!userExists)
+                {
+                    return BadRequest("User does not exist."); // HTTP 400 Bad Request
+                }
+
+                var subExists = await subService.GetByIdAsync(newDiscussion.SubjectId);
+                if (subExists == null) // שינויים כאן
+                {
+                    return BadRequest("Subject does not exist."); // HTTP 400 Bad Request
                 }
 
                 await DiscussionService.AddNewDiscussionAsync(newDiscussion);
@@ -132,4 +151,3 @@ namespace WebApi.Controllers
         }
     }
 }
-

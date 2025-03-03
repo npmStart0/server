@@ -16,6 +16,7 @@ The High-Tech Forum Server project is a robust server-side application designed 
 `git clone https://github.com/npmStart0/server.git`
 
 2. Create a `.env.local` file in the root directory of the project containing the database connection string in the following format:
+`CLIENT_URL="http://localhost:3000"`
 `DB_CONNECTION="server=127.0.0.1;uid=root;pwd=1234;database=npm"`
 Ensure you update the content of the following parameters:
 - `uid`: username 
