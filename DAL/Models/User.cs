@@ -24,13 +24,13 @@ namespace DAL.Models
         public virtual ICollection<Comment> Comments { get; set; }
        
     }
-     public enum UserStatus
-     {
-        SimpleUser, // יכול רק לצפות
-        PendingApproval, // מילא טופס וממתין לאישור
-        Approved, // אושר ויכול להתחבר
-        LoggedIn, // מחובר ויכול להגיב וליצור דיונים
-        Admin // מנהל עם כל ההרשאות
+    public enum UserStatus
+    {
+       SimpleUser,
+       PendingApproval,
+       Approved,
+       LoggedIn,
+       Admin
      }
 
 }
