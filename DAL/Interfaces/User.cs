@@ -15,5 +15,6 @@ namespace DAL.Interfaces
         Task<User> UpdateAsync(User entity);
         Task<User> AddAsync(User entity);
         Task DeleteAsync(int id);
+        Task<IEnumerable<User>> GetPendingUsersAsync();
     }
 }

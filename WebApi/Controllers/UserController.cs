@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
+using DAL.Models;
+using BLL.Services;
 
 namespace WebApi.Controllers
 {
@@ -23,8 +26,8 @@ namespace WebApi.Controllers
             this.logger = logger;
         }
 
-
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -35,7 +38,7 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError("Failed to get all users: " + ex.Message);
-                return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
+                return StatusCode(500, "Internal Server Error");// HTTP 500 Internal Server Error
             }
         }
 
@@ -64,10 +67,13 @@ namespace WebApi.Controllers
             try
             {
                 var user = await UserService.GetByEmailAndByPasswordAsync(email, password);
-                if (user == null)
+                if (user == null || user.Status != UserStatus.Approved)
                 {
                     return NotFound("User not found with provided email and password"); // HTTP 404 Not Found
                 }
+
+                user.Status= UserStatus.LoggedIn; 
+                await UserService.UpdateAsync(user);
                 return Ok(user); // HTTP 200 OK
             }
             catch (Exception ex)
@@ -87,6 +93,7 @@ namespace WebApi.Controllers
                     return BadRequest("User cannot be null"); // HTTP 400 Bad Request
                 }
 
+                newUser.Status = UserStatus.PendingApproval;
                 await UserService.AddNewUserAsync(newUser);
                 return CreatedAtAction(nameof(GetById), new { id = newUser.Id }, newUser); // HTTP 201 Created
             }
@@ -101,6 +108,45 @@ namespace WebApi.Controllers
                 return StatusCode(500, "Internal Server Error"); // HTTP 500 Internal Server Error
             }
         }
+        [HttpGet("pending")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetPendingUsers()
+        {
+            try
+            {
+                var pendingUsers = await UserService.GetPendingUsersAsync();
+                return Ok(pendingUsers);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Failed to get pending users: " + ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpPut("approve/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ApproveUser(int id)
+        {
+            try
+            {
+                var user = await UserService.GetByIdAsync(id);
+                if (user == null)
+                {
+                    return NotFound($"User with ID {id} not found");
+                }
+
+                user.Status = UserStatus.Approved; 
+                await UserService.UpdateAsync(user);
+                return Ok($"User with ID {id} has been approved.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to approve user with ID {id}: " + ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UserDTO user)

@@ -15,5 +15,7 @@ namespace BLL.Interfaces
         Task<List<UserDTO>> GetAllUsersAsync();
         Task<UserDTO> GetByEmailAndByPasswordAsync(string Email, string Password);
         Task<UserDTO> UpdateAsync(UserDTO User);
+        Task<IEnumerable<UserDTO>> GetPendingUsersAsync();
+
     }
 }

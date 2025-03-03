@@ -19,8 +19,19 @@ namespace DAL.Models
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
-
+        [Required]
+        public UserStatus Status { get; set; }
         public virtual ICollection<Discussion> Discussions { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+       
     }
+    public enum UserStatus
+    {
+       SimpleUser,
+       PendingApproval,
+       Approved,
+       LoggedIn,
+       Admin
+     }
+
 }

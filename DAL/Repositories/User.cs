@@ -121,5 +121,11 @@ namespace DAL.Repositories
                 throw;
             }
         }
+        public async Task<IEnumerable<User>> GetPendingUsersAsync()
+        {
+            return await context.Users.Where(u => u.Status == UserStatus.PendingApproval).ToListAsync();
+        }
+
+
     }
 }

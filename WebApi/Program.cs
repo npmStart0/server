@@ -19,6 +19,10 @@ string clientUrl = Env.GetString("CLIENT_URL");
 // Configure DbContext
 builder.Services.AddDbContext<MyDbContext>();
 
+
+// Configure DbContext
+builder.Services.AddDbContext<MyDbContext>();
+
 // Configure repositories and services
 builder.Services.AddTransient<ICommentRepository, CommentRepository>();
 builder.Services.AddTransient<ICommentService, CommentService>();
